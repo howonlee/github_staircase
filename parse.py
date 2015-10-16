@@ -96,11 +96,17 @@ def seconds_from_sched(sched_filename):
             curr_date = next_date
     return seconds
 
+def categorize_infelicitous_commits(sched_filename):
+    """
+    Look at the commits that bypass that inverse dynamic relation
+    """
+    pass
+
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
     #seconds = seconds_from_sched("brew_sched")
-    seconds = seconds_from_sched("/home/curuinor/data/linux_sched")
+    seconds = seconds_from_sched("sched")
     print "finished reading"
     lagged = np.roll(seconds, -1)
     plt.scatter(seconds, lagged, s=4, alpha=0.7)
