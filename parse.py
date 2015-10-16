@@ -64,21 +64,20 @@ def takens_embedding(data, tau_max=100, mode="2d"):
     elif mode == "anim":
         fig = plt.figure()
         ax = plt.axes(xlim=(0, 90000), ylim=(0, 90000))
-        line, = ax.plot([], [], lw=2)
+        line, = ax.plot([], [], lw=0.8)
         def init():
             line.set_data([], [])
             return line,
         def animate(i):
             line.set_data(data_lag0[:i], data_lag1[:i])
             return line,
-        anim = animation.FuncAnimation(fig, animate, init_func=init, frames=1000, interval=20, blit=True)
-        anim.save("anim.mp4", fps=30)
+        anim = animation.FuncAnimation(fig, animate, init_func=init, frames=data_lag0.size, interval=5, blit=True)
+        anim.save("anim_%d.mp4" % data_lag0.size, fps=60)
         plt.show()
 
-if __name__ == "__main__":
+def seconds_from_sched(sched_filename):
     seconds = []
-    #with open("/home/curuinor/data/linux_sched") as sched_file:
-    with open("sched") as sched_file:
+    with open(sched_filename) as sched_file:
         sched_lines = sched_file.readlines()
         #sched_lines = sched_lines[:4000]
         print "num lines: ", len(sched_lines)
@@ -95,8 +94,12 @@ if __name__ == "__main__":
                 continue
             seconds.append(diff.seconds)
             curr_date = next_date
-            #"Fri Oct 16 00:48:51 2015 -0000"
-            #'Thu Oct 15 17:41:19 2015 -0700'
+    return seconds
+
+
+if __name__ == "__main__":
+    #with open("/home/curuinor/data/linux_sched") as sched_file:
+    seconds = seconds_from_sched("brew_sched")
     print "finished reading"
     seconds_avg = np.mean(seconds)
     #plt.plot(np.abs(np.diff(seconds)))
