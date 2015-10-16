@@ -99,9 +99,10 @@ def seconds_from_sched(sched_filename):
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
-    seconds = seconds_from_sched("brew_sched")
+    #seconds = seconds_from_sched("brew_sched")
+    seconds = seconds_from_sched("/home/curuinor/data/linux_sched")
     print "finished reading"
-    seconds_avg = np.mean(seconds)
-    #plt.plot(np.abs(np.diff(seconds)))
-    #plt.show()
-    takens_embedding(np.array(seconds), mode="anim")
+    lagged = np.roll(seconds, -1)
+    plt.scatter(seconds, lagged, s=4, alpha=0.7)
+    plt.show()
+    #takens_embedding(np.array(seconds), mode="anim")
