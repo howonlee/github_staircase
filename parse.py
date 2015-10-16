@@ -119,18 +119,18 @@ def predict_next_times(seconds):
         members.append((idx, (first, second)))
         prods.append(first * second)
     firsts = [member[1][0] for member in members]
-    firsts_mean = np.median(np.array(firsts))
-    prods_mean = np.median(np.array(prods))
-    ratio = prods_mean / firsts_mean
     # try dynamic ratio?
     errors = []
     for idx, tup in members:
+        if idx in (0, 1, 2):
+            continue
         first, second = tup
-        second_pred = ratio * float(first)
-        errors.append(second_pred - second)
+        second_pred = (prods[idx-1]) / float(first)
+        errors.append(np.abs(second_pred - second))
     plt.plot(errors)
     plt.show()
     print errors
+    print "error sum: ", sum(errors)
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
