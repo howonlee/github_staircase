@@ -2,6 +2,7 @@ import arrow
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools as it
+import operator as op
 import pylab
 import matplotlib
 from matplotlib import animation
@@ -100,15 +101,48 @@ def categorize_infelicitous_commits(sched_filename):
     """
     Look at the commits that bypass that inverse dynamic relation
     """
-    pass
+    infelicitous = []
+    seconds = seconds_from_sched(sched_filename)
+    members = []
+    prods = []
+    for (idx, first) , second in zip(enumerate(seconds), seconds[1:]):
+        members.append((idx, (first, second)))
+        prods.append(first * second)
+    prods_mean = np.mean(np.array(prods))
+    prods_mean = prods_mean * np.log(prods_mean)
+    infelicitous = filter(lambda x: x[1][0] * x[1][1] > prods_mean, members)
+    return infelicitous
 
+def predict_next_times(seconds):
+    members, prods = [], []
+    for (idx, first) , second in zip(enumerate(seconds), seconds[1:]):
+        members.append((idx, (first, second)))
+        prods.append(first * second)
+    firsts = [member[1][0] for member in members]
+    firsts_mean = np.median(np.array(firsts))
+    prods_mean = np.median(np.array(prods))
+    ratio = prods_mean / firsts_mean
+    # try dynamic ratio?
+    errors = []
+    for idx, tup in members:
+        first, second = tup
+        second_pred = ratio * float(first)
+        errors.append(second_pred - second)
+    plt.plot(errors)
+    plt.show()
+    print errors
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
-    #seconds = seconds_from_sched("brew_sched")
-    seconds = seconds_from_sched("sched")
-    print "finished reading"
-    lagged = np.roll(seconds, -1)
-    plt.scatter(seconds, lagged, s=4, alpha=0.7)
-    plt.show()
+    seconds = seconds_from_sched("dio_sched")
+    predict_next_times(seconds)
+    #infelicitous = categorize_infelicitous_commits("dio_sched")
+    #print infelicitous
+    #plt.scatter(map(op.itemgetter(1), infelicitous), map(op.itemgetter(0), infelicitous))
+    #plt.show()
+    #seconds = seconds_from_sched("sched")
+    #print "finished reading"
+    #lagged = np.roll(seconds, -1)
+    #plt.scatter(seconds, lagged, s=4, alpha=0.7)
+    #plt.show()
     #takens_embedding(np.array(seconds), mode="anim")
