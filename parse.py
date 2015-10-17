@@ -135,6 +135,12 @@ def predict_next_times(seconds):
     print errors
     print "error sum: ", sum(errors)
 
+def test_markovianness(seconds):
+    pass
+
+def test_inversishness(seconds):
+    pass
+
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
     seconds = seconds_from_sched("dio_sched")
