@@ -125,7 +125,10 @@ def predict_next_times(seconds):
         if idx in (0, 1, 2):
             continue
         first, second = tup
-        second_pred = (prods[idx-1]) / float(first)
+###### is there a contingency on your markovianness? sometimes markovian, sometimes inverse?
+##### is there enough information to be deciding between the two, to poke at when this thing explodes deterministically?
+        second_pred = first
+        #second_pred = (prods[idx-1]) / float(first)
         errors.append(np.abs(second_pred - second))
     plt.plot(errors)
     plt.show()
