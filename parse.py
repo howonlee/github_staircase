@@ -135,11 +135,15 @@ def predict_next_times(seconds):
     print errors
     print "error sum: ", sum(errors)
 
-def test_markovianness(seconds):
-    pass
-
-def test_inversishness(seconds):
-    pass
+def test_dual_process_hypothesis(seconds):
+    data, lag = seconds, seconds[1:]
+    markov = [something]
+    markov_errors = something
+    inv = [something]
+    inverse_errors = something
+    min_errs = [min(markov thing, inv thing) for x in xrange(len(data))]
+    plt.plot(min_errors)
+    plt.show()
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
