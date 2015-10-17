@@ -136,19 +136,24 @@ def predict_next_times(seconds):
     print "error sum: ", sum(errors)
 
 def test_dual_process_hypothesis(seconds):
-    data, lag = seconds, seconds[1:]
-    markov = [something]
-    markov_errors = something
-    inv = [something]
-    inverse_errors = something
-    min_errs = [min(markov thing, inv thing) for x in xrange(len(data))]
-    plt.plot(min_errors)
+    data, lag = seconds[:-1], seconds[1:]
+    prods = [data[x] * lag[x] for x in xrange(len(data))]
+    # markov guess for lag is just data
+    markov_errors = [abs(data[x] - lag[x]) for x in xrange(len(data))]
+    inv = [prods[x] / data[x] for x in xrange(1, len(data))]
+    inv_errors = [abs(inv[x] - lag[x]) for x in xrange(len(data) - 1)]
+    print markov_errors
+    min_errs = [min(markov_errors[x], inv_errors[x]) for x in xrange(len(data) - 1)]
+    plt.plot(min_errs)
     plt.show()
+    #inverse_errors = something
+    #plt.plot(min_errors)
+    #plt.show()
 
 if __name__ == "__main__":
     #with open("/home/curuinor/data/linux_sched") as sched_file:
     seconds = seconds_from_sched("dio_sched")
-    predict_next_times(seconds)
+    test_dual_process_hypothesis(seconds)
     #infelicitous = categorize_infelicitous_commits("dio_sched")
     #print infelicitous
     #plt.scatter(map(op.itemgetter(1), infelicitous), map(op.itemgetter(0), infelicitous))
